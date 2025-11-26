@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books Client</title>
+</head>
+<body>
+<h1>Books Client</h1>
+
+<button id="loadAllBtn">Load all books</button>
+<div id="booksList"></div>
+
+<h2>Get book by id</h2>
+<input id="bookIdInput" type="number" placeholder="ID">
+<button id="getByIdBtn">Get</button>
+<div id="bookById"></div>
+
+<h2>Create book</h2>
+<input id="titleInput" type="text" placeholder="Title">
+<button id="createBtn">Create</button>
+<div id="createResult"></div>
+
+<script>
+    const baseUrl = "http://localhost:8080/books";
+
+    document.getElementById("loadAllBtn").onclick = async () => {
+        const resp = await fetch(baseUrl);
+        const data = await resp.json();
+        document.getElementById("booksList").innerText = JSON.stringify(data, null, 2);
+    };
+
+    document.getElementById("getByIdBtn").onclick = async () => {
+        const id = document.getElementById("bookIdInput").value;
+        if (!id) return;
+        const resp = await fetch(baseUrl + "/" + id);
+        if (resp.status === 404) {
+            document.getElementById("bookById").innerText = "Not found";
+            return;
+        }
+        const data = await resp.json();
+        document.getElementById("bookById").innerText = JSON.stringify(data, null, 2);
+    };
+
+    document.getElementById("createBtn").onclick = async () => {
+        const title = document.getElementById("titleInput").value;
+        if (!title) return;
+        const resp = await fetch(baseUrl, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({title: title})
+        });
+        const text = await resp.text();
+        document.getElementById("createResult").innerText = text;
+    };
+</script>
+</body>
+</html>

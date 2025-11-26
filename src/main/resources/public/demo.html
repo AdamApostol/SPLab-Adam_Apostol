@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Client</title>
+</head>
+<body>
+<h1>Demo Client</h1>
+
+<button id="callDemoBtn">Call /demo</button>
+<div id="demoResult"></div>
+
+<script>
+    document.getElementById("callDemoBtn").onclick = async () => {
+        const resp = await fetch("http://localhost:8080/demo");
+        const text = await resp.text();
+        document.getElementById("demoResult").innerText = text;
+    };
+</script>
+</body>
+</html>
